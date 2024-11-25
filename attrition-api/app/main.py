@@ -1,69 +1,52 @@
 
+
 # -*- coding: utf-8 -*-
 from flask import Flask, request, render_template, jsonify
 import joblib
 import traceback
 import pandas as pd
-from sklearn.compose import ColumnTransformer
-
-#import re
-
 
 app = Flask(__name__)
 
+# Carga del modelo
 #model = joblib.load('./model_attrition.joblib')
 model = joblib.load('/opt/attrition-api/app/model_attrition.joblib')
-
-
 
 @app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
 
-
-
 @app.route('/predict', methods=['POST'])
 def predict():
-    try:                              
-        age=request.form.get('age', type=float)
-        BusinessTravel=request.form.get('BusinessTravel', type=float)
-        DailyRate=request.form.get('DailyRate', type=float)
-        Department=request.form.get('Department', type=float)
-           
-        try:
-            age = int(age)
-            BusinessTravel=int(BusinessTravel)
-            DailyRate=int(DailyRate)
-            Department=int(Department)
-            
-        except (ValueError, TypeError):
-            return jsonify({'error': 'Age y DailyRate deben ser números enteros válidos.'}), 400
-
-                 
-        input_data = pd.DataFrame({            
-            'age':[age],
-            'BusinessTravel':[BusinessTravel],
-            'DailyRate':[DailyRate],
-            'Department':[Department]})
-                            
-        X = input_data
-                      
-        prediction=model.predict(X)
+    try:
+        # Lista de las variables esperadas por el modelo
+        expected_fields = [
+            'age', 'BusinessTravel', 'Department',
+            'DistanceFromHome', 'Education', 'EducationField',
+            'Gender', 'MaritalStatus', 'MonthlyRate',
+            'NumCompaniesWorked', 'TrainingTimesLastYear', 'YearsAtCompany'
+        ]
         
-        cols = ['Attrition']
+        # Captura de los datos del formulario
+        input_data = {}
+        for field in expected_fields:
+            value = request.form.get(field, type=float)
+            if value is None:
+                return jsonify({'error': f'El campo {field} es requerido y debe ser un número válido.'}), 400
+            input_data[field] = int(value)
         
-        res = pd.DataFrame(prediction, columns=cols)       
-        res = res.loc[:, (res != 0).all(axis=0)]
+        # Preparar los datos para el modelo
+        input_df = pd.DataFrame([input_data])
         
-        table_html = res.to_html(classes='table table-striped', index=False)
-
+        # Realizar la predicción
+        prediction = model.predict(input_df)[0]  # Obtener la primera (y única) predicción
+        
         return jsonify({'Attrition': int(prediction)})
-        #return render_template('table2.html', table_html=table_html)
-        
-                
+    
     except Exception as e:
+        # Mostrar error en consola y responder con un mensaje
         traceback.print_exc()
-        return jsonify({'error': str(e)})
+        return jsonify({'error': f'Ha ocurrido un error: {str(e)}'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False, host='0.0.0.0', port=8000)
