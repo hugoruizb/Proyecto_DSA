@@ -11,7 +11,9 @@ from sklearn.compose import ColumnTransformer
 
 app = Flask(__name__)
 
-model = joblib.load('./model_attrition.joblib')
+#model = joblib.load('./model_attrition.joblib')
+model = joblib.load('/opt/attrition-api/app/model_attrition.joblib')
+
 
 
 @app.route('/', methods=['GET'])
