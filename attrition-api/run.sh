@@ -1,1 +1,2 @@
-uvicorn app.main:app --host 0.0.0.0 --port $PORT
+#!/bin/bash
+gunicorn -w 4 -b 0.0.0.0:8000 app.main:app
