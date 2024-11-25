@@ -7,12 +7,12 @@ RUN adduser --disabled-password --gecos '' api-user
 WORKDIR /opt/attrition-api
 
 # Instalar dependencias
-ADD ./attrition-api /opt/attrition-api/
+COPY ./attrition-api /opt/attrition-api/
 RUN pip install --upgrade pip
 RUN pip install -r /opt/attrition-api/requirements.txt
 
-# Copiar el modelo
-COPY model_attrition.joblib /opt/attrition-api/app/model_attrition.joblib
+# Copiar el modelo desde la carpeta correcta
+COPY attrition-api/app/model_attrition.joblib /opt/attrition-api/app/model_attrition.joblib
 
 # Hacer el directorio de trabajo ejecutable 
 RUN chmod +x /opt/attrition-api/run.sh
