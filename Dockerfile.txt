@@ -11,6 +11,9 @@ ADD ./attrition-api /opt/attrition-api/
 RUN pip install --upgrade pip
 RUN pip install -r /opt/attrition-api/requirements.txt
 
+# Copiar el modelo
+COPY model_attrition.joblib /opt/attrition-api/app/model_attrition.joblib
+
 # Hacer el directorio de trabajo ejecutable 
 RUN chmod +x /opt/attrition-api/run.sh
 # Cambiar propiedad de la carpeta a api-user 
