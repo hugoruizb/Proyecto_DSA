@@ -1,6 +1,6 @@
 
-model = joblib.load('./model_attrition.joblib')
-#model = joblib.load('/opt/attrition-api/app/model_attrition.joblib')
+#model = joblib.load('./model_attrition.joblib')
+model = joblib.load('/opt/attrition-api/app/model_attrition.joblib')
 
 
 
