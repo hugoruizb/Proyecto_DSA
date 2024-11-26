@@ -35,7 +35,7 @@
             grid-column: span 1;
             font-weight: bold;
         }
-        input[type="text"], textarea, input[type="number"] {
+        input[type="text"], textarea, input[type="number"], select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -73,42 +73,67 @@
     <h2>Ingrese los Detalles del trabajador</h2>
     <form id="predictionForm">
         <label for="age">Age:</label>
-        <input type="number" id="age" name="age" required>
+        <input type="number" id="age" name="Age" min="1" required>
 
         <label for="BusinessTravel">BusinessTravel:</label>
-        <input type="number" id="BusinessTravel" name="BusinessTravel" required>
+        <select id="BusinessTravel" name="BusinessTravel" required>
+            <option value="2">Travel Rarely</option>
+            <option value="1">Travel Frequently</option>
+            <option value="0">Non-Travel</option>
+        </select>
 
         <label for="Department">Department:</label>
-        <input type="number" id="Department" name="Department" required>
+        <select id="Department" name="Department" required>
+            <option value="2">Sales</option>
+            <option value="1">Research & Development</option>
+            <option value="0">Human Resources</option>
+        </select>
 
         <label for="DistanceFromHome">DistanceFromHome:</label>
-        <input type="number" id="DistanceFromHome" name="DistanceFromHome" required>
+        <input type="number" id="DistanceFromHome" name="DistanceFromHome" min="1" required>
 
         <label for="Education">Education:</label>
-        <input type="number" id="Education" name="Education" required>
+        <select id="Education" name="Education" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
 
         <label for="EducationField">EducationField:</label>
-        <input type="number" id="EducationField" name="EducationField" required>
+        <select id="EducationField" name="EducationField" required>
+            <option value="1">Life Sciences</option>
+            <option value="3">Medical</option>
+            <option value="2">Marketing</option>
+            <option value="5">Technical Degree</option>
+            <option value="0">Human Resources</option>
+            <option value="4">Other</option>
+        </select>
 
         <label for="Gender">Gender:</label>
-        <input type="number" id="Gender" name="Gender" required>
+        <select id="Gender" name="Gender" required>
+            <option value="0">Female</option>
+            <option value="1">Male</option>
+        </select>
 
         <label for="MaritalStatus">MaritalStatus:</label>
-        <input type="number" id="MaritalStatus" name="MaritalStatus" required>
-
-        <label for="MonthlyRate">MonthlyRate:</label>
-        <input type="number" id="MonthlyRate" name="MonthlyRate" required>
+        <select id="MaritalStatus" name="MaritalStatus" required>
+            <option value="2">Single</option>
+            <option value="1">Married</option>
+            <option value="0">Divorced</option>
+        </select>
 
         <label for="NumCompaniesWorked">NumCompaniesWorked:</label>
-        <input type="number" id="NumCompaniesWorked" name="NumCompaniesWorked" required>
+        <input type="number" id="NumCompaniesWorked" name="NumCompaniesWorked" min="1" required>
 
         <label for="TrainingTimesLastYear">TrainingTimesLastYear:</label>
-        <input type="number" id="TrainingTimesLastYear" name="TrainingTimesLastYear" required>
+        <input type="number" id="TrainingTimesLastYear" name="TrainingTimesLastYear" min="0" required>
 
         <label for="YearsAtCompany">YearsAtCompany:</label>
-        <input type="number" id="YearsAtCompany" name="YearsAtCompany" required>
+        <input type="number" id="YearsAtCompany" name="YearsAtCompany" min="1" required>
 
-        <input type="submit" value="Predecir attrition">
+        <input type="submit" value="Predecir Attrition">
     </form>
 
     <div id="result" style="display:none;">
