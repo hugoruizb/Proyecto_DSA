@@ -4,14 +4,12 @@ import joblib
 import traceback
 import pandas as pd
 
-#model = joblib.load('./model_attrition.joblib')
-model = joblib.load('/opt/attrition-api/app/model_attrition.joblib')
-
-
 app = Flask(__name__)
 
 # Carga del modelo
-model = joblib.load('./model_attrition.joblib')
+#model = joblib.load('./model_attrition.joblib')
+model = joblib.load('/opt/attrition-api/app/model_attrition.joblib')
+
 
 @app.route('/', methods=['GET'])
 def home():
