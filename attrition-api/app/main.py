@@ -1,13 +1,12 @@
 
-#model = joblib.load('./model_attrition.joblib')
-model = joblib.load('/opt/attrition-api/app/model_attrition.joblib')
-
-
-
 from flask import Flask, request, render_template, jsonify
 import joblib
 import traceback
 import pandas as pd
+
+#model = joblib.load('./model_attrition.joblib')
+model = joblib.load('/opt/attrition-api/app/model_attrition.joblib')
+
 
 app = Flask(__name__)
 
