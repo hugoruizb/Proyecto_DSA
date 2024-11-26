@@ -1,6 +1,9 @@
 
+model = joblib.load('./model_attrition.joblib')
+#model = joblib.load('/opt/attrition-api/app/model_attrition.joblib')
 
-# -*- coding: utf-8 -*-
+
+
 from flask import Flask, request, render_template, jsonify
 import joblib
 import traceback
@@ -9,8 +12,7 @@ import pandas as pd
 app = Flask(__name__)
 
 # Carga del modelo
-#model = joblib.load('./model_attrition.joblib')
-model = joblib.load('/opt/attrition-api/app/model_attrition.joblib')
+model = joblib.load('./model_attrition.joblib')
 
 @app.route('/', methods=['GET'])
 def home():
@@ -19,34 +21,56 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Lista de las variables esperadas por el modelo
-        expected_fields = [
-            'age', 'BusinessTravel', 'Department',
-            'DistanceFromHome', 'Education', 'EducationField',
-            'Gender', 'MaritalStatus', 'MonthlyRate',
-            'NumCompaniesWorked', 'TrainingTimesLastYear', 'YearsAtCompany'
-        ]
-        
         # Captura de los datos del formulario
-        input_data = {}
-        for field in expected_fields:
-            value = request.form.get(field, type=float)
-            if value is None:
-                return jsonify({'error': f'El campo {field} es requerido y debe ser un número válido.'}), 400
-            input_data[field] = int(value)
+        age = request.form.get('Age', type=int)
+        BusinessTravel = request.form.get('BusinessTravel', type=int)
+        Department = request.form.get('Department', type=int)
+        DistanceFromHome = request.form.get('DistanceFromHome', type=int)
+        Education = request.form.get('Education', type=int)
+        EducationField = request.form.get('EducationField', type=int)
+        Gender = request.form.get('Gender', type=int)
+        MaritalStatus = request.form.get('MaritalStatus', type=int)
+        NumCompaniesWorked = request.form.get('NumCompaniesWorked', type=int)
+        TrainingTimesLastYear = request.form.get('TrainingTimesLastYear', type=int)
+        YearsAtCompany = request.form.get('YearsAtCompany', type=int)
+
+        # Validación de datos (si es necesario)
+        required_fields = [age, BusinessTravel, Department, DistanceFromHome, Education,
+                           EducationField, Gender, MaritalStatus, NumCompaniesWorked,
+                           TrainingTimesLastYear, YearsAtCompany]
+
+        if None in required_fields:
+            return jsonify({'error': 'Todos los campos son obligatorios.'}), 400
+
+        # Preparar datos de entrada
+        input_data = pd.DataFrame({
+            'Age': [age],
+            'BusinessTravel': [BusinessTravel],
+            'Department': [Department],
+            'DistanceFromHome': [DistanceFromHome],
+            'Education': [Education],
+            'EducationField': [EducationField],
+            'Gender': [Gender],
+            'MaritalStatus': [MaritalStatus],
+            'NumCompaniesWorked': [NumCompaniesWorked],
+            'TrainingTimesLastYear': [TrainingTimesLastYear],
+            'YearsAtCompany': [YearsAtCompany]
+        })
+
+        # Hacer predicción
+        prediction = model.predict(input_data)
         
-        # Preparar los datos para el modelo
-        input_df = pd.DataFrame([input_data])
+        if prediction[0]==1:
+            resp="SI"
+        else:
+            resp="N0"
         
-        # Realizar la predicción
-        prediction = model.predict(input_df)[0]  # Obtener la primera (y única) predicción
-        
-        return jsonify({'Attrition': int(prediction)})
-    
+        return jsonify({'Attrition': resp})
+       
+
     except Exception as e:
-        # Mostrar error en consola y responder con un mensaje
         traceback.print_exc()
-        return jsonify({'error': f'Ha ocurrido un error: {str(e)}'}), 500
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False, host='0.0.0.0', port=8000)
